@@ -7,8 +7,8 @@
  * 
  */
 
-function callFunction(function_name,params) {
-    return (isFunction(function_name) == true) ? function_name(params) : null
+function callFunction(functionName, params) {
+    return (isFunction(functionName) == true) ? function_name(params) : null
 }
 
 function isJSON(json_string){
