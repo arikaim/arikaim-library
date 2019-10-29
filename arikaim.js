@@ -8,12 +8,12 @@
  */
 
 function callFunction(functionName, params) {
-    return (isFunction(functionName) == true) ? function_name(params) : null
+    return (isFunction(functionName) == true) ? functionName(params) : null
 }
 
-function isJSON(json_string){
+function isJSON(json){
     try {
-        JSON.parse(json_string);
+        JSON.parse(json);
     }
     catch(e) {
         return false;
@@ -30,9 +30,9 @@ function getObjectProperty(path, obj) {
     }, obj || self)
 }
 
-function getValue(path,obj,default_value) {
-    var val = getObjectProperty(path,obj);
-    return (val == null) ? default_value : val;      
+function getValue(path, obj, defaultValue) {
+    var value = getObjectProperty(path,obj);
+    return (value == null) ? defaultValue : value;      
 }
 
 function getDefaultValue(variable,default_value) {
