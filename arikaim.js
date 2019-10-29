@@ -35,8 +35,8 @@ function getValue(path, obj, defaultValue) {
     return (value == null) ? defaultValue : value;      
 }
 
-function getDefaultValue(variable,default_value) {
-    return (isEmpty(variable) == true) ? default_value : variable;     
+function getDefaultValue(variable, defaultValue) {
+    return (isEmpty(variable) == true) ? defaultValue : variable;     
 }
 
 function isFunction(variable) {
@@ -62,6 +62,7 @@ function isEmpty(variable) {
     if (isArray(variable) == true) {
         return (variable.length == 0)
     }
+
     return false;
 }
 
@@ -98,6 +99,7 @@ function getElementAttributes(selector, exclude) {
             }
         });
     });
+
     return attributes;   
 }
 
@@ -126,7 +128,11 @@ function Events() {
         context = (isEmpty(context) == true) ? this : context;
         name = (isEmpty(name) == true) ? null : name;
 
-        var listener = { callback: callback, context: context, name: name };
+        var listener = { 
+            callback: callback,
+            context: context, 
+            name: name 
+        };
 
         if (isEmpty(events[event]) == true) {
             events[event] = [];
@@ -178,6 +184,7 @@ function Events() {
                 return true;
             }
         }
+
         return false;
     };
 
@@ -261,6 +268,7 @@ function ApiResponse(response) {
                 return (isEmpty(errors[callback]) == false) ? errors[callback] : false;              
             }
         }
+
         return true;
     };
 
@@ -288,11 +296,11 @@ function Storage() {
     this.set = function(name, value, time) {
         switch (type) {
             case "cookie": {
-                this.setCookie(name, value, time);
+                this.setCookie(name,value,time);
                 break;
             }
             default:{
-                this.setCookie(name, value, time);
+                this.setCookie(name,value,time);
                 break;
             }
         }
@@ -301,12 +309,10 @@ function Storage() {
     this.get = function(name) {
         switch (type) {
             case "cookie":{
-                return this.getCookie(name);
-                break;
+                return this.getCookie(name);             
             }
             default:{
-                return this.getCookie(name);
-                break;
+                return this.getCookie(name);              
             }
         }
     };
@@ -325,14 +331,14 @@ function Storage() {
     };
 
     this.getCookie = function(name) {
-        var field_name = name + "=";
+        var fieldName = name + "=";
         cookie = document.cookie.split(';');
         var item = "";
         for(var i = 0;i < cookie.length; i++) {
             item = cookie[i];          
             while (item.charAt(0) == ' ') item = item.substring(1,item.length);
-            if (item.indexOf(field_name) == 0) {
-              return item.substring(field_name.length,item.length);
+            if (item.indexOf(fieldName) == 0) {
+              return item.substring(fieldName.length,item.length);
             }
         }
         return null;
@@ -343,6 +349,7 @@ function Storage() {
             sessionStorage.setItem(name,value);
             return true;            
         } 
+
         return false;
     };
 
@@ -350,6 +357,7 @@ function Storage() {
         if (isObject(sessionStorage) == true) {
             return sessionStorage.getItem(name);                    
         } 
+
         return false;
     };
 
@@ -358,6 +366,7 @@ function Storage() {
             sessionStorage.clear();
             return true;
         }
+
         return false;
     }; 
     
@@ -366,6 +375,7 @@ function Storage() {
             sessionStorage.removeItem(name);
             return true;
         }
+
         return false;
     };
 }
@@ -383,21 +393,20 @@ function Arikaim() {
     }
   
     var host        = window.location.origin;
-    var dev_mode    = true;
-    var jwt_token   = '';
-    var services    = [];
-    var default_language = "en";   
-    var base_url    = "";
-    var version     = "1.0";
+    var devMode    = true;
+    var jwtToken   = '';
+    var services    = [];  
+    var baseUrl    = '';
+    var version     = '1.0.3';
 
     this.storage    = new Storage();       
 
     this.getBaseUrl = function() {
-       return (isEmpty(base_url) == true) ? "" : base_url         
+       return (isEmpty(baseUrl) == true) ? "" : baseUrl         
     };
 
     this.setBaseUrl = function(url) {       
-        base_url = (isEmpty(url) == true) ? this.resolveBaseUrl() : url;
+        baseUrl = (isEmpty(url) == true) ? this.resolveBaseUrl() : url;
     }; 
 
     this.resolveBaseUrl = function() {
@@ -406,7 +415,6 @@ function Arikaim() {
 
     this.init = function(url) {
         resolveLibrayrParams('#library_arikaim');
-
         this.setBaseUrl(url);    
         // check for jquery 
         window.onload = function() {
@@ -417,7 +425,8 @@ function Arikaim() {
         this.log("\nArikaim CMS v" + this.getVersion());  
     };
 
-    this.connect = function(host,key,secret,onSuccess,onError) {
+    /* for remove
+    this.connect = function(host, key, secret, onSuccess, onError) {
         this.setHost(host);
         var data = { api_key: key, api_secret: secret };
         this.post('/core/api/create/token/',data,function(result) {
@@ -427,18 +436,20 @@ function Arikaim() {
             callFunction(onError,error);
         });
     };
+    */
 
-    this.getLanguagePath = function(language_code) {
+    this.getLanguagePath = function(language) {
         var url = this.getUrl();
-        language_code = getDefaultValue(language_code,'en');
+        language = getDefaultValue(language,'en');
 
-        if (isEmpty(language_code) == true) {
+        if (isEmpty(language) == true) {
             return url;
         }
         if (url.substr(-3,1) == '/' || url.substr(-4,1) == '/') {
             url = url.slice(0,-3);         
         }
-        return (url.slice(-1) == "/") ? url + language_code + "/" : url + "/" + language_code + "/";         
+
+        return (url.slice(-1) == "/") ? url + language + "/" : url + "/" + language + "/";         
     };
 
     this.getUrl = function() {
@@ -451,12 +462,12 @@ function Arikaim() {
         document.location.href = url;
     };
 
-    this.setLanguage = function(language_code) {       
-        language_code = getDefaultValue(language_code,'en');          
-        var url = this.getLanguagePath(language_code);
+    this.setLanguage = function(language) {       
+        language = getDefaultValue(language,'en');          
+        var url = this.getLanguagePath(language);
      
-        this.storage.setCookie('language',language_code,30);
-        this.storage.setSession('language',language_code);
+        this.storage.setCookie('language',language,30);
+        this.storage.setSession('language',language);
         this.loadUrl(url);
     };
 
@@ -465,33 +476,34 @@ function Arikaim() {
         if (isEmpty(language) == true ) {
             language = this.storage.getCookie('language');
         }
-        return getDefaultValue(language,default_language);         
+
+        return getDefaultValue(language,'en');         
     };
     
     this.setToken = function(token, save) {
-        jwt_token = token;
+        jwtToken = token;
         if (save == true) {
             this.storage.set('token',token);
         }       
     };
 
     this.clearToken = function() {
-        jwt_token = '';
+        jwtToken = '';
         this.storage.set('token','');
     };
 
     this.getToken = function() {
-        return (isEmpty(jwt_token) == true) ? this.storage.get('token','') : jwt_token;
+        return (isEmpty(jwtToken) == true) ? this.storage.get('token','') : jwtToken;
     };
 
     this.log = function(msg) { 
-        if (dev_mode == true) {
+        if (devMode == true) {
             console.log(msg);
         }
     };
 
     this.setDevMode = function(mode) { 
-        dev_mode = mode;
+        devMode = mode;
         if (mode == true) {
             this.log("Development mode.\n");
         }
@@ -513,41 +525,44 @@ function Arikaim() {
         return window.location.pathname;
     };
 
-    this.post = function(url,data,onSuccess,onError) {
+    this.post = function(url, data, onSuccess, onError) {
         if (isString(data) == true) {
             if ($(data).length > 0) {
                 data = $(data).serialize();
             } 
         }
+
         return this.apiCall(url,'POST',data,onSuccess,onError);
     };
 
-    this.get = function(url,onSuccess,onError, data) {   
+    this.get = function(url, onSuccess, onError, data) {   
         data = getDefaultValue(data,null);
         return this.apiCall(url,'GET',data,onSuccess,onError);
     };
 
-    this.delete = function(url,onSuccess,onError) {   
+    this.delete = function(url, onSuccess, onError) {   
         return this.apiCall(url,'DELETE',null,onSuccess,onError);
     };
 
-    this.put = function(url,data,onSuccess,onError) {
+    this.put = function(url, data, onSuccess, onError) {
         if (isString(data) == true) {
             data = $(data).serialize();
         }   
+
         return this.apiCall(url,'PUT',data,onSuccess,onError);
     };
 
-    this.patch = function(url,data,onSuccess,onError) {  
+    this.patch = function(url, data, onSuccess, onError) {  
         if (isString(data) == true) {
             data = $(data).serialize();
         } 
+
         return this.apiCall(url,'PATCH',data,onSuccess,onError);
     };
 
-    this.register = function(name,service_def) {
+    this.register = function(name, service) {
         this.log('Register service: ' + name);   
-        services[name] = service_def;
+        services[name] = service;
     };  
 
     this.call = function(name,args) {
@@ -555,18 +570,18 @@ function Arikaim() {
         return services[name].apply(null, args || []); 
     };  
 
-    this.includeCSSFile = function(file_url) {
+    this.includeCSSFile = function(url) {
         $('<link>').appendTo('head').attr({
             type: 'text/css', 
             rel: 'stylesheet',
-            href: file_url
+            href: url
         });
     };
 
     this.includeScript = function(url, onSuccess, onError) {
-        $.getScript(url).done(function(script,status) {
+        $.getScript(url).done(function(script, status) {
             callFunction(onSuccess,status);
-        }).fail(function(jqxhr,settings,exception) {
+        }).fail(function(jqxhr, settings, exception) {
             callFunction(onError,exception);
         });       
     }; 
@@ -577,9 +592,9 @@ function Arikaim() {
     };
 
     this.loadScript = function(url, async, crossorigin, id) {
-        
         var script = document.createElement("script");
         script.src = url;
+
         if (async == true) {
             script.setAttribute('async');
         }
@@ -597,32 +612,25 @@ function Arikaim() {
         return (isEmpty(token) == false) ? "Bearer " + token : '';          
     };
 
-    this.open = function(method,url,request_data,onSuccess,onError) {
-        this.request(url,method,request_data,onSuccess,onError,null,'none',true);
+    this.open = function(method, url, data, onSuccess, onError) {
+        this.request(url,method,data,onSuccess,onError,null,'none',true);
     };
 
-    /**
-     * ajax call
-     * @param {*} url Request relative URL
-     * @param {*} method Request method (GET,POST,PUT,DELETE,PATCH)
-     * @param {*} request_data Ajax Request data 
-     * @param {*} callback  Response handler function 
-     */
-    this.request = function(url,method,request_data,onSuccess,onError,onProgress,cross_domain) {    
+    this.request = function(url, method, requestData, onSuccess, onError, onProgress, crossDomain) {    
         var deferred = new $.Deferred();
 
-        cross_domain = getDefaultValue(cross_domain,false); 
-        request_data = getDefaultValue(request_data,null);  
+        crossDomain = getDefaultValue(crossDomain,false); 
+        requestData = getDefaultValue(requestData,null);  
 
-        if (cross_domain == false) {
+        if (crossDomain == false) {
             url = this.getBaseUrl() + url;
         }
-        var auth_header = this.getAuthHeader();  
-        var header_data = null;
+        var authHeader = this.getAuthHeader();  
+        var headerData = null;
 
-        if ((method == "GET") && (isObject(request_data) == true)) {     
-            header_data = JSON.stringify(request_data);
-            request_data = null;
+        if ((method == "GET") && (isObject(requestData) == true)) {     
+            headerData = JSON.stringify(requestData);
+            requestData = null;
         }
           
         var progress = function() {
@@ -636,16 +644,16 @@ function Arikaim() {
         $.ajax({
             url: url,
             method: method,          
-            data: request_data,
+            data: requestData,
             xhr: progress,
-            crossDomain: cross_domain,
+            crossDomain: crossDomain,
             beforeSend: function(request) {
                 request.setRequestHeader('Accept',"application/json; charset=utf-8");
-                if (auth_header != null) {
-                    request.setRequestHeader('Authorization',auth_header);
+                if (authHeader != null) {
+                    request.setRequestHeader('Authorization',authHeader);
                 }
-                if (isEmpty(header_data) == false) {         
-                    request.setRequestHeader('Params',header_data);
+                if (isEmpty(headerData) == false) {         
+                    request.setRequestHeader('Params',headerData);
                 }
             },
             success: function (data) {   
@@ -668,10 +676,10 @@ function Arikaim() {
         return deferred.promise();
     };
 
-    this.apiCall = function(url,method,request_data,onSuccess,onError,onProgress) {
+    this.apiCall = function(url, method, requestData, onSuccess, onError, onProgress) {
         var deferred = new $.Deferred();
 
-        this.request(url,method,request_data,function(response) {      
+        this.request(url,method,requestData,function(response) {      
             if (response.hasError() == false) {  
                 deferred.resolve(response.getResult());  
                 callFunction(onSuccess,response.getResult());                         
