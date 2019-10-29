@@ -55,7 +55,7 @@ function supportUpload() {
 function isEmpty(variable) {
     if (variable === undefined) return true;
     if (variable === null) return true;
-    if (variable === "") return true;
+    if (variable === '') return true;
     if (isObject(variable) == true) {
         return $.isEmptyObject(variable);
     }
@@ -212,14 +212,14 @@ function Events() {
  */
 function ApiResponse(response) {
       
-    var status = "ok";
+    var status = 'ok';
     var errors = [];
-    var result = "";
+    var result = '';
 
     this.createEmpty = function() {
-        status = "ok";
+        status = 'ok';
         errors = [];
-        result = "";
+        result = '';
     };
 
     this.init = function(response) {
@@ -291,11 +291,11 @@ function ApiResponse(response) {
  */
 function Storage() {
 
-    var type = "cookie";
+    var type = 'cookie';
 
     this.set = function(name, value, time) {
         switch (type) {
-            case "cookie": {
+            case 'cookie': {
                 this.setCookie(name,value,time);
                 break;
             }
@@ -308,7 +308,7 @@ function Storage() {
     
     this.get = function(name) {
         switch (type) {
-            case "cookie":{
+            case 'cookie':{
                 return this.getCookie(name);             
             }
             default:{
@@ -318,22 +318,22 @@ function Storage() {
     };
 
     this.setCookie = function(name, value, days) {
-        var expires = "";
+        var expires = '';
         if (isEmpty(days) == false) {
             var date = new Date();
             date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-            expires = ";expires=" + date.toGMTString();           
+            expires = ';expires=' + date.toGMTString();           
         } 
         if (isArray(value) == true) {
             value = JSON.stringify(value);
         }
-        document.cookie = name + "=" + value + expires + ";path=/";
+        document.cookie = name + '=' + value + expires + ';path=/';
     };
 
     this.getCookie = function(name) {
-        var fieldName = name + "=";
+        var fieldName = name + '=';
         cookie = document.cookie.split(';');
-        var item = "";
+        var item = '';
         for(var i = 0;i < cookie.length; i++) {
             item = cookie[i];          
             while (item.charAt(0) == ' ') item = item.substring(1,item.length);
@@ -402,7 +402,7 @@ function Arikaim() {
     this.storage    = new Storage();       
 
     this.getBaseUrl = function() {
-       return (isEmpty(baseUrl) == true) ? "" : baseUrl         
+       return (isEmpty(baseUrl) == true) ? '' : baseUrl         
     };
 
     this.setBaseUrl = function(url) {       
@@ -410,7 +410,7 @@ function Arikaim() {
     }; 
 
     this.resolveBaseUrl = function() {
-       return (isEmpty(arikaim_base_url) == true) ? window.location.protocol + "//" + window.location.host : arikaim_base_url;   
+       return (isEmpty(arikaim_base_url) == true) ? window.location.protocol + '//' + window.location.host : arikaim_base_url;   
     };
 
     this.init = function(url) {
@@ -419,10 +419,10 @@ function Arikaim() {
         // check for jquery 
         window.onload = function() {
             if (isEmpty(window.jQuery) == true) {  
-                console.log("Error: jQuery library missing.");
+                console.log('Error: jQuery library missing.');
             } 
         }       
-        this.log("\nArikaim CMS v" + this.getVersion());  
+        this.log('\nArikaim CMS v' + this.getVersion());  
     };
 
     /* for remove
@@ -449,7 +449,7 @@ function Arikaim() {
             url = url.slice(0,-3);         
         }
 
-        return (url.slice(-1) == "/") ? url + language + "/" : url + "/" + language + "/";         
+        return (url.slice(-1) == '/') ? url + language + '/' : url + '/' + language + '/';         
     };
 
     this.getUrl = function() {
@@ -505,7 +505,7 @@ function Arikaim() {
     this.setDevMode = function(mode) { 
         devMode = mode;
         if (mode == true) {
-            this.log("Development mode.\n");
+            this.log('Development mode.\n');
         }
     };
 
@@ -566,7 +566,7 @@ function Arikaim() {
     };  
 
     this.call = function(name,args) {
-        this.log("Call Service: " + name);
+        this.log('Call Service: ' + name);
         return services[name].apply(null, args || []); 
     };  
 
@@ -592,7 +592,7 @@ function Arikaim() {
     };
 
     this.loadScript = function(url, async, crossorigin, id) {
-        var script = document.createElement("script");
+        var script = document.createElement('script');
         script.src = url;
 
         if (async == true) {
@@ -604,12 +604,12 @@ function Arikaim() {
         if (isEmpty(id) == false) {
             script.setAttribute('id',id);
         }
-        document.getElementsByTagName("body")[0].appendChild(script);       
+        document.getElementsByTagName('body')[0].appendChild(script);       
     };
 
     this.getAuthHeader = function() {
         var token = this.getToken();       
-        return (isEmpty(token) == false) ? "Bearer " + token : '';          
+        return (isEmpty(token) == false) ? 'Bearer ' + token : '';          
     };
 
     this.open = function(method, url, data, onSuccess, onError) {
@@ -628,14 +628,14 @@ function Arikaim() {
         var authHeader = this.getAuthHeader();  
         var headerData = null;
 
-        if ((method == "GET") && (isObject(requestData) == true)) {     
+        if ((method == 'GET') && (isObject(requestData) == true)) {     
             headerData = JSON.stringify(requestData);
             requestData = null;
         }
           
         var progress = function() {
             var xhr = new window.XMLHttpRequest();
-            xhr.upload.addEventListener("progress",function(event) {
+            xhr.upload.addEventListener('progress',function(event) {
                 callFunction(onProgress,event);
             }, false);
             return xhr;
@@ -648,7 +648,7 @@ function Arikaim() {
             xhr: progress,
             crossDomain: crossDomain,
             beforeSend: function(request) {
-                request.setRequestHeader('Accept',"application/json; charset=utf-8");
+                request.setRequestHeader('Accept','application/json; charset=utf-8');
                 if (authHeader != null) {
                     request.setRequestHeader('Authorization',authHeader);
                 }
@@ -662,10 +662,10 @@ function Arikaim() {
                 callFunction(onSuccess,response);            
             },
             error: function (xhr, status, error) {             
-                arikaim.log("Error\n");
-                arikaim.log("Request url: " + url + "\n");
-                arikaim.log("Error details: " + error);
-                arikaim.log("Response: " + xhr.responseText);
+                arikaim.log('Error\n');
+                arikaim.log('Request url: ' + url + '\n');
+                arikaim.log('Error details: ' + error);
+                arikaim.log('Response: ' + xhr.responseText);
                 response = new ApiResponse(xhr.responseText);               
                 deferred.reject(response.getErrors());
         
