@@ -1,5 +1,6 @@
 {
     "title": "Arikaim",
+    "name": "arikaim",
     "version": "1.0.3",
     "description": "Arikaim client library",
     "repository": "https://github.com/arikaim/arikaim-library.git",
