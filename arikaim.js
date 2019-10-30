@@ -397,7 +397,7 @@ function Arikaim() {
     var jwtToken = '';
     var services = [];  
     var baseUrl  = '';
-    var version  = '1.0.4';
+    var version  = '1.0.5';
 
     this.storage    = new Storage();       
 
