@@ -392,12 +392,12 @@ function Arikaim() {
         return Arikaim.instance;
     }
   
-    var host        = window.location.origin;
-    var devMode    = true;
-    var jwtToken   = '';
-    var services    = [];  
-    var baseUrl    = '';
-    var version     = '1.0.3';
+    var host     = window.location.origin;
+    var devMode  = true;
+    var jwtToken = '';
+    var services = [];  
+    var baseUrl  = '';
+    var version  = '1.0.4';
 
     this.storage    = new Storage();       
 
@@ -424,19 +424,6 @@ function Arikaim() {
         }       
         this.log('\nArikaim CMS v' + this.getVersion());  
     };
-
-    /* for remove
-    this.connect = function(host, key, secret, onSuccess, onError) {
-        this.setHost(host);
-        var data = { api_key: key, api_secret: secret };
-        this.post('/core/api/create/token/',data,function(result) {
-            setToken(result);
-            callFunction(onSuccess,result);
-        },function(error) {
-            callFunction(onError,error);
-        });
-    };
-    */
 
     this.getLanguagePath = function(language) {
         var url = this.getUrl();
