@@ -8,5 +8,7 @@ Arikaim CMS javascript library
 
 ### Install
 ```
+
 composer require arikaim/arikaim-library
+
 ```
