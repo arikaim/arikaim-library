@@ -11,6 +11,36 @@ function callFunction(functionName, params) {
     return (isFunction(functionName) == true) ? functionName(params) : null
 }
 
+function safeCall(objName, callback, showError, showErrorDetails) {
+    showError = getDefaultValue(showError,false);
+    showErrorDetails = getDefaultValue(showErrorDetails,false);
+    var obj = (isObject(this[objName]) == true) ? this[objName] : null;
+
+    if (isObject(obj) == true) {
+        if (isFunction(callback) == true) {
+            var call = function(obj,callback) {
+                try {
+                    return callback(obj);
+                } catch (error) {
+                    if (showError) {
+                        console.warn('Warning: ' + error.message);
+                        if (showErrorDetails) {
+                            console.log(error);
+                        }                   
+                    }
+                }
+            }
+        }
+        return call(obj,callback);
+    } else {
+        if (showError) {
+            console.warn('Warning: ' + objName + 'is not valid object');
+        }
+    }
+
+    return false;
+}
+
 function isJSON(json){
     try {
         JSON.parse(json);
@@ -397,7 +427,7 @@ function Arikaim() {
     var jwtToken = '';
     var services = [];  
     var baseUrl  = '';
-    var version  = '1.0.5';
+    var version  = '1.0.8';
 
     this.storage    = new Storage();       
 
