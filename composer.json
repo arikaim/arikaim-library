@@ -10,7 +10,6 @@
         "homepage": "http://arikaim.com"
     }],
     "require": {
-        "arikaim/installer": "*"
     },
     "extra": {
         "branch-alias": {
