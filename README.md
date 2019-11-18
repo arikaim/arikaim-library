@@ -6,7 +6,7 @@
   * [Arikaim CMS](https://github.com/arikaim/arikaim)
 
 ### Install
-```
+```bash
 
 composer require arikaim/arikaim-library
 
