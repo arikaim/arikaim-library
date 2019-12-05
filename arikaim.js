@@ -34,7 +34,7 @@ function safeCall(objName, callback, showError, showErrorDetails) {
         return call(obj,callback);
     } else {
         if (showError) {
-            console.warn('Warning: ' + objName + 'is not valid object');
+            console.warn('Warning: ' + objName + ' is not valid object');
         }
     }
 
