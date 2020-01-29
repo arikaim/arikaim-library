@@ -613,7 +613,7 @@ function Arikaim() {
         script.src = url;
 
         if (async == true) {
-            script.setAttribute('async');
+            script.setAttribute('async','async');
         }
         if (isEmpty(crossorigin) == false) {
             script.setAttribute('crossorigin',crossorigin);
