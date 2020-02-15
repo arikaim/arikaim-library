@@ -13,7 +13,7 @@ function callFunction(functionName, params) {
 function safeCall(objName, callback, showError, showErrorDetails) {
     showError = getDefaultValue(showError,false);
     showErrorDetails = getDefaultValue(showErrorDetails,false);
-    var obj = (isObject(this[objName]) == true) ? this[objName] : null;
+    var obj = (isObject(window[objName]) == true) ? window[objName] : null;
 
     if (isObject(obj) == true) {
         if (isFunction(callback) == true) {
