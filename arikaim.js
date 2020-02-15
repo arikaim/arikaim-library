@@ -1,11 +1,10 @@
 /**
  *  Arikaim
- *  
  *  @copyright  Copyright (c) Konstantin Atanasov <info@arikaim.com>
  *  @license    http://www.arikaim.com/license.html
  *  http://www.arikaim.com
- * 
  */
+"use strict";
 
 function callFunction(functionName, params) {
     return (isFunction(functionName) == true) ? functionName(params) : null
@@ -362,7 +361,7 @@ function Storage() {
 
     this.getCookie = function(name) {
         var fieldName = name + '=';
-        cookie = document.cookie.split(';');
+        var cookie = document.cookie.split(';');
         var item = '';
         for(var i = 0;i < cookie.length; i++) {
             item = cookie[i];          
