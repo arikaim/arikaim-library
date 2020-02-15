@@ -682,7 +682,7 @@ function Arikaim() {
                 arikaim.log('Request url: ' + url + '\n');
                 arikaim.log('Error details: ' + error);
                 arikaim.log('Response: ' + xhr.responseText);
-                response = new ApiResponse(xhr.responseText);               
+                var response = new ApiResponse(xhr.responseText);               
                 deferred.reject(response.getErrors());
         
                 callFunction(onError,response.getErrors());
