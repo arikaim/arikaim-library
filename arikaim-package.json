@@ -2,7 +2,7 @@
     "title": "Arikaim",
     "package-type": "library",
     "name": "arikaim",
-    "version": "1.0.15",
+    "version": "1.0.16",
     "description": "Arikaim client library",
     "repository": "https://github.com/arikaim/arikaim-library.git",
     "files": [

@@ -4,7 +4,7 @@
  *  @license    http://www.arikaim.com/license.html
  *  http://www.arikaim.com
  */
-"use strict";
+'use strict';
 
 function callFunction(functionName, params) {
     return (isFunction(functionName) == true) ? functionName(params) : null
@@ -351,12 +351,12 @@ function Storage() {
         if (isEmpty(days) == false) {
             var date = new Date();
             date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-            expires = ';expires=' + date.toGMTString();           
+            expires = '; expires=' + date.toGMTString();   
         } 
         if (isArray(value) == true) {
             value = JSON.stringify(value);
         }
-        document.cookie = name + '=' + value + expires + ';path=/';
+        document.cookie = name + '=' + value + expires + '; path=/;';
     };
 
     this.getCookie = function(name) {
@@ -678,10 +678,6 @@ function Arikaim() {
                 callFunction(onSuccess,response);            
             },
             error: function (xhr, status, error) {             
-                arikaim.log('Error\n');
-                arikaim.log('Request url: ' + url + '\n');
-                arikaim.log('Error details: ' + error);
-                arikaim.log('Response: ' + xhr.responseText);
                 var response = new ApiResponse(xhr.responseText);               
                 deferred.reject(response.getErrors());
         
