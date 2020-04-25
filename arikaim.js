@@ -6,8 +6,17 @@
  */
 'use strict';
 
-function callFunction(functionName, params) {
-    return (isFunction(functionName) == true) ? functionName(params) : null
+function callFunction(functionName, params, context) {
+    if (isFunction(functionName) == true) {
+        return functionName(params)
+    }
+
+    if (isString(functionName) == true) {
+        if (isEmpty(context) == false) {
+            return (isEmpty(context[functionName]) == false) ? context[functionName](params) : null;
+        }
+        return (isEmpty(window[functionName]) == false) ? window[functionName](params) : null;
+    }
 }
 
 function safeCall(objName, callback, showError, showErrorDetails) {
@@ -69,8 +78,7 @@ function getDefaultValue(variable, defaultValue) {
 }
 
 function isFunction(variable) {
-    if (typeof variable === 'function') return true;    
-    return false;
+    return (typeof variable === 'function') ? true : false;       
 }
 
 function isArray(variable) {
