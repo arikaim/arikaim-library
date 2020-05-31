@@ -8,7 +8,7 @@
 
 function callFunction(functionName, params, context) {
     if (isFunction(functionName) == true) {
-        return functionName(params)
+        return functionName(params);
     }
 
     if (isString(functionName) == true) {
@@ -90,6 +90,7 @@ function supportUpload() {
 }
 
 function isEmpty(variable) {
+    if (typeof variable === 'undefined') return true;
     if (variable === undefined) return true;
     if (variable === null) return true;
     if (variable === '') return true;
@@ -443,7 +444,7 @@ function Arikaim() {
     };
 
     this.setBaseUrl = function(url) {       
-        baseUrl = (isEmpty(url) == true) ? this.resolveBaseUrl() : url;
+        baseUrl = (isEmpty(url) == true) ? this.resolveBaseUrl() : url;       
     }; 
 
     this.resolveBaseUrl = function() {
