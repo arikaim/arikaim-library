@@ -154,10 +154,6 @@ function resolveLibrayrParams(selector) {
     });   
 }
 
-/**
- * @class Events
- * Events Emitter
- */
 function Events() {
     var self = this;
     var events = {};
@@ -243,11 +239,6 @@ function Events() {
     };
 } 
 
-/**
- *  @class ApiResponse
- *  Api response object
- *  Api calls returns ApiResponse object
- */
 function ApiResponse(response) {
       
     var status = 'ok';
@@ -323,10 +314,6 @@ function ApiResponse(response) {
     };
 }
 
-/**
- *  @class Storage
- *  Cookie, localStorage, sessionStorage class
- */
 function Storage() {
 
     var type = 'cookie';
@@ -418,11 +405,6 @@ function Storage() {
     };
 }
 
-/**
- *  @class Arikaim
- *  Main Arikaim CMS object
- * 
- */
 function Arikaim() {
     var self = this; 
 
