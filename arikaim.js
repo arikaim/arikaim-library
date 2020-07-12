@@ -6,16 +6,16 @@
  */
 'use strict';
 
-function callFunction(functionName, params, context) {
+function callFunction(functionName, params, context, options) {
     if (isFunction(functionName) == true) {
-        return functionName(params);
+        return functionName(params,options);
     }
 
     if (isString(functionName) == true) {
         if (isEmpty(context) == false) {
-            return (isEmpty(context[functionName]) == false) ? context[functionName](params) : null;
+            return (isEmpty(context[functionName]) == false) ? context[functionName](params,options) : null;
         }
-        return (isEmpty(window[functionName]) == false) ? window[functionName](params) : null;
+        return (isEmpty(window[functionName]) == false) ? window[functionName](params,options) : null;
     }
 }
 
@@ -672,7 +672,7 @@ function Arikaim() {
                 var response = new ApiResponse(xhr.responseText);               
                 deferred.reject(response.getErrors());
         
-                callFunction(onError,response.getErrors());
+                callFunction(onError,response.getErrors(),null,response.getResult());
             }
         });   
 
@@ -690,9 +690,9 @@ function Arikaim() {
                 deferred.reject(response.getErrors());  
                 callFunction(onError,response.getErrors());                  
             }
-        },function(errors) {
+        },function(errors,options) {
             deferred.reject(errors);
-            callFunction(onError,errors);
+            callFunction(onError,errors,null,options);
         },onProgress);
 
         return deferred.promise();

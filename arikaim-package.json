@@ -2,11 +2,11 @@
     "title": "Arikaim",
     "package-type": "library",
     "name": "arikaim",
-    "version": "1.1.2",
+    "version": "1.1.3",
     "description": "Arikaim client library",
     "repository": "https://github.com/arikaim/arikaim-library.git",
     "files": [
-        "arikaim-1.1.2.min.js"
+        "arikaim-1.1.3.min.js"
     ],
     "params-readonly": true,
     "params": {
