@@ -154,8 +154,7 @@ function resolveLibrayrParams(selector) {
     });   
 }
 
-function Events() {
-    var self = this;
+function Events() {   
     var events = {};
 
     this.addListener = function(event, callback, name, context) {
@@ -406,8 +405,7 @@ function Storage() {
 }
 
 function Arikaim() {
-    var self = this; 
-
+  
     if (isObject(Arikaim.instance) == true) {
         return Arikaim.instance;
     }
@@ -418,6 +416,7 @@ function Arikaim() {
     var services = [];  
     var baseUrl  = '';
     var version  = '1.0.8';
+    var properties = {};
 
     this.storage    = new Storage();       
 
@@ -697,6 +696,22 @@ function Arikaim() {
 
         return deferred.promise();
     };
+
+    this.setProperty = function(name, callback) {
+        properties[name] = callback;
+    };
+
+    this.getProperty = function(name, defaultValue) {
+        if (isEmpty(properties[name]) == true) {
+            return defaultValue;
+        }
+
+        if (isFunction(properties[name]) == true) {
+            return callFunction(properties[name]);
+        }
+
+        return properties[name];
+    }
 
     // Singleton
     Arikaim.instance = this;
