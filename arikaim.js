@@ -415,7 +415,7 @@ function Arikaim() {
     var jwtToken = '';
     var services = [];  
     var baseUrl  = '';
-    var version  = '1.0.8';
+    var version  = '1.2.0';
     var properties = {};
 
     this.storage    = new Storage();       
@@ -531,39 +531,39 @@ function Arikaim() {
         return window.location.pathname;
     };
 
-    this.post = function(url, data, onSuccess, onError) {
+    this.post = function(url, data, onSuccess, onError, customHeader) {
         if (isString(data) == true) {
             if ($(data).length > 0) {
                 data = $(data).serialize();
             } 
         }
 
-        return this.apiCall(url,'POST',data,onSuccess,onError);
+        return this.apiCall(url,'POST',data,onSuccess,onError,null,false,customHeader);
     };
 
-    this.get = function(url, onSuccess, onError, data) {   
+    this.get = function(url, onSuccess, onError, data, customHeader) {   
         data = getDefaultValue(data,null);
-        return this.apiCall(url,'GET',data,onSuccess,onError);
+        return this.apiCall(url,'GET',data,onSuccess,onError,null,false,customHeader);
     };
 
     this.delete = function(url, onSuccess, onError) {   
         return this.apiCall(url,'DELETE',null,onSuccess,onError);
     };
 
-    this.put = function(url, data, onSuccess, onError) {
+    this.put = function(url, data, onSuccess, onError, customHeader) {
         if (isString(data) == true) {
             data = $(data).serialize();
         }   
 
-        return this.apiCall(url,'PUT',data,onSuccess,onError);
+        return this.apiCall(url,'PUT',data,onSuccess,onError,null,false,customHeader);
     };
 
-    this.patch = function(url, data, onSuccess, onError) {  
+    this.patch = function(url, data, onSuccess, onError, customHeader) {  
         if (isString(data) == true) {
             data = $(data).serialize();
         } 
 
-        return this.apiCall(url,'PATCH',data,onSuccess,onError);
+        return this.apiCall(url,'PATCH',data,onSuccess,onError,null,false,customHeader);
     };
 
     this.register = function(name, service) {
@@ -618,11 +618,25 @@ function Arikaim() {
         return (isEmpty(token) == false) ? 'Bearer ' + token : '';          
     };
 
-    this.open = function(method, url, data, onSuccess, onError) {
-        this.request(url,method,data,onSuccess,onError,null,'none',true);
+    this.open = function(method, url, data, onSuccess, onError, customHeader) {
+        this.request(url,method,data,onSuccess,onError,null,true,customHeader);
     };
 
-    this.request = function(url, method, requestData, onSuccess, onError, onProgress, crossDomain) {    
+    this.downloadFile = function(url, method, fileName, requestData, onSuccess, onError, onProgress) {
+        var requestSuccess = function(data) {
+            callFunction(onSuccess,fileName);
+            var link = document.createElement('a');
+            link.href = window.URL.createObjectURL(data);
+            link.download = fileName;
+            link.click();            
+        };
+
+        return this.request(url,method,requestData,requestSuccess,onError,onProgress,false,null,true,{
+            responseType: 'blob'
+        });
+    }
+
+    this.request = function(url, method, requestData, onSuccess, onError, onProgress, crossDomain, customHeader, rawResponseData, xhrFields) {    
         var deferred = new $.Deferred();
 
         crossDomain = getDefaultValue(crossDomain,false); 
@@ -639,19 +653,29 @@ function Arikaim() {
             requestData = null;
         }
           
-        var progress = function() {
-            var xhr = new window.XMLHttpRequest();
-            xhr.upload.addEventListener('progress',function(event) {
-                callFunction(onProgress,event);
-            }, false);
-            return xhr;
-        };
-        
         $.ajax({
             url: url,
             method: method,          
             data: requestData,
-            xhr: progress,
+            xhrFields: xhrFields,
+            xhr: function() {
+                var xhr = new XMLHttpRequest();
+                xhr.upload.addEventListener('progress',function(event) {
+                    callFunction(onProgress,event);
+                }, false);
+                // for blob error response
+                if (isObject(xhrFields) == true) {
+                    if (xhrFields.responseType == 'blob') {
+                        xhr.onreadystatechange = function() {
+                            if (xhr.readyState == 2) {
+                                xhr.responseType = (xhr.status == 200) ? 'blob' : 'text';                            
+                            }
+                        };
+                    }                   
+                }
+              
+                return xhr;
+            },          
             crossDomain: crossDomain,
             beforeSend: function(request) {
                 request.setRequestHeader('Accept','application/json; charset=utf-8');
@@ -661,13 +685,16 @@ function Arikaim() {
                 if (isEmpty(headerData) == false) {         
                     request.setRequestHeader('Params',headerData);
                 }
+                if (isObject(customHeader) == true) {
+                    request.setRequestHeader(customHeader.name,customHeader.value);
+                }
             },
             success: function (data) {   
-                var response = new ApiResponse(data);  
+                var response = (rawResponseData == true) ? data : new ApiResponse(data);                
                 deferred.resolve(response);  
                 callFunction(onSuccess,response);            
             },
-            error: function (xhr, status, error) {             
+            error: function (xhr, status, error) {
                 var response = new ApiResponse(xhr.responseText);               
                 deferred.reject(response.getErrors());
         
@@ -678,7 +705,7 @@ function Arikaim() {
         return deferred.promise();
     };
 
-    this.apiCall = function(url, method, requestData, onSuccess, onError, onProgress) {
+    this.apiCall = function(url, method, requestData, onSuccess, onError, onProgress, crossDomain, customHeader) {
         var deferred = new $.Deferred();
 
         this.request(url,method,requestData,function(response) {      
@@ -692,7 +719,7 @@ function Arikaim() {
         },function(errors,options) {
             deferred.reject(errors);
             callFunction(onError,errors,null,options);
-        },onProgress);
+        },onProgress,crossDomain,customHeader);
 
         return deferred.promise();
     };
