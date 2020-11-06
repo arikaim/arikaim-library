@@ -351,7 +351,7 @@ function Storage() {
         if (isArray(value) == true) {
             value = JSON.stringify(value);
         }
-        document.cookie = name + '=' + value + expires + '; path=/;';
+        document.cookie = name + '=' + value + expires + '; path=/;SameSite=Lax';
     };
 
     this.getCookie = function(name) {
@@ -415,7 +415,7 @@ function Arikaim() {
     var jwtToken = '';
     var services = [];  
     var baseUrl  = '';
-    var version  = '1.2.0';
+    var version  = '1.2.1';
     var properties = {};
 
     this.storage    = new Storage();       
