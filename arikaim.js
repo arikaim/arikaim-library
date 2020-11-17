@@ -351,6 +351,7 @@ function Storage() {
         if (isArray(value) == true) {
             value = JSON.stringify(value);
         }
+
         document.cookie = name + '=' + value + expires + '; path=/;SameSite=Lax';
     };
 
