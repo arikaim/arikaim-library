@@ -426,7 +426,7 @@ function Arikaim() {
     };
 
     this.setBaseUrl = function(url) {       
-        baseUrl = (isEmpty(url) == true) ? this.resolveBaseUrl() : url;       
+        baseUrl = (isEmpty(url) == true) ? this.resolveBaseUrl() : url;   
     }; 
 
     this.resolveBaseUrl = function() {
@@ -475,6 +475,7 @@ function Arikaim() {
      
         this.storage.setCookie('language',language,30);
         this.storage.setSession('language',language);
+
         this.loadUrl(url);
     };
 
@@ -532,31 +533,31 @@ function Arikaim() {
         return window.location.pathname;
     };
 
-    this.post = function(url, data, onSuccess, onError, customHeader) {
+    this.post = function(url, data, onSuccess, onError, customHeader, onProgress) {
         if (isString(data) == true) {
             if ($(data).length > 0) {
                 data = $(data).serialize();
             } 
         }
 
-        return this.apiCall(url,'POST',data,onSuccess,onError,null,false,customHeader);
+        return this.apiCall(url,'POST',data,onSuccess,onError,onProgress,false,customHeader);
     };
 
-    this.get = function(url, onSuccess, onError, data, customHeader) {   
+    this.get = function(url, onSuccess, onError, data, customHeader, onProgress) {   
         data = getDefaultValue(data,null);
-        return this.apiCall(url,'GET',data,onSuccess,onError,null,false,customHeader);
+        return this.apiCall(url,'GET',data,onSuccess,onError,onProgress,false,customHeader);
     };
 
     this.delete = function(url, onSuccess, onError) {   
         return this.apiCall(url,'DELETE',null,onSuccess,onError);
     };
 
-    this.put = function(url, data, onSuccess, onError, customHeader) {
+    this.put = function(url, data, onSuccess, onError, customHeader, onProgress) {
         if (isString(data) == true) {
             data = $(data).serialize();
         }   
 
-        return this.apiCall(url,'PUT',data,onSuccess,onError,null,false,customHeader);
+        return this.apiCall(url,'PUT',data,onSuccess,onError,onProgress,false,customHeader);
     };
 
     this.patch = function(url, data, onSuccess, onError, customHeader) {  
@@ -653,14 +654,20 @@ function Arikaim() {
             headerData = JSON.stringify(requestData);
             requestData = null;
         }
-          
+       
         $.ajax({
             url: url,
             method: method,          
             data: requestData,
             xhrFields: xhrFields,
             xhr: function() {
-                var xhr = new XMLHttpRequest();
+                var xhr = new XMLHttpRequest();               
+                if (isEmpty(onProgress) == false) {
+                    xhr.onprogress = function(event) { 
+                        callFunction(onProgress,event);                                                                                                                         
+                    };
+                }
+               
                 xhr.upload.addEventListener('progress',function(event) {
                     callFunction(onProgress,event);
                 }, false);
@@ -690,12 +697,12 @@ function Arikaim() {
                     request.setRequestHeader(customHeader.name,customHeader.value);
                 }
             },
-            success: function (data) {   
-                var response = (rawResponseData == true) ? data : new ApiResponse(data);                
+            success: function(data) {   
+                var response = (rawResponseData == true) ? data : new ApiResponse(data);    
                 deferred.resolve(response);  
                 callFunction(onSuccess,response);            
             },
-            error: function (xhr, status, error) {
+            error: function(xhr, status, error) {
                 var response = new ApiResponse(xhr.responseText);               
                 deferred.reject(response.getErrors());
         
