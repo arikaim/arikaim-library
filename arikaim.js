@@ -416,7 +416,7 @@ function Arikaim() {
     var jwtToken = '';
     var services = [];  
     var baseUrl  = '';
-    var version  = '1.2.1';
+    var version  = '1.2.4';
     var properties = {};
 
     this.storage    = new Storage();       
