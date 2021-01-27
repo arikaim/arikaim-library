@@ -429,8 +429,10 @@ function Arikaim() {
         baseUrl = (isEmpty(url) == true) ? this.resolveBaseUrl() : url;   
     }; 
 
-    this.resolveBaseUrl = function() {
-       return (isEmpty(arikaim_base_url) == true) ? window.location.protocol + '//' + window.location.host : arikaim_base_url;   
+    this.resolveBaseUrl = function() {       
+        var url = window.location.protocol + '//' + window.location.host;
+
+        return (isEmpty(arikaim_base_url) == true) ? url : url + arikaim_base_url;   
     };
 
     this.init = function(url) {
@@ -647,6 +649,7 @@ function Arikaim() {
         if (crossDomain == false) {
             url = this.getBaseUrl() + url;
         }
+
         var authHeader = this.getAuthHeader();  
         var headerData = null;
 
