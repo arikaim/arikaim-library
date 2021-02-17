@@ -6,6 +6,13 @@
  */
 'use strict';
 
+function createObject(className, baseName) {
+    className.prototype = new baseName();
+    className.prototype.constructor = baseName;
+
+    return new className();  
+};
+
 function callFunction(functionName, params, context, options) {
     if (isFunction(functionName) == true) {
         return functionName(params,options);
@@ -17,6 +24,15 @@ function callFunction(functionName, params, context, options) {
         }
         return (isEmpty(window[functionName]) == false) ? window[functionName](params,options) : null;
     }
+}
+
+function withObject(name, callback) {
+    var obj = (isDefined(name) == true) ? window[name] : null;
+    if (isObject(obj) == false) {
+        return null;
+    }
+
+    return callFunction(callback,obj);
 }
 
 function safeCall(objName, callback, showError, showErrorDetails) {
@@ -89,6 +105,10 @@ function supportUpload() {
     return (typeof(window.FileReader) != 'undefined');
 }
 
+function isDefined(variableName) {
+    return (typeof window[variableName] !== 'undefined');
+}
+
 function isEmpty(variable) {
     if (typeof variable === 'undefined') return true;
     if (variable === undefined) return true;
@@ -117,7 +137,7 @@ function isObject(variable) {
 }
 
 function isString(variable) {
-    return (typeof variable === 'string' || variable instanceof String) ? true : false;
+    return (typeof variable === 'string' || variable instanceof String);
 }
 
 function createVariable(name, value) {
@@ -416,7 +436,7 @@ function Arikaim() {
     var jwtToken = '';
     var services = [];  
     var baseUrl  = '';
-    var version  = '1.2.4';
+    var version  = '1.2.5';
     var properties = {};
 
     this.storage    = new Storage();       
@@ -589,15 +609,16 @@ function Arikaim() {
     };
 
     this.includeScript = function(url, onSuccess, onError) {
-        $.getScript(url).done(function(script, status) {
+        return $.getScript(url).done(function(script, status) {           
             callFunction(onSuccess,status);
         }).fail(function(jqxhr, settings, exception) {
             callFunction(onError,exception);
         });       
     }; 
 
-    this.findScript = function(url) {
+    this.findScript = function(url) { 
         var search = document.querySelector('script[src="' + url + '"]');
+     
         return !isEmpty(search);
     };
 
@@ -649,7 +670,7 @@ function Arikaim() {
         if (crossDomain == false) {
             url = this.getBaseUrl() + url;
         }
-
+ 
         var authHeader = this.getAuthHeader();  
         var headerData = null;
 
