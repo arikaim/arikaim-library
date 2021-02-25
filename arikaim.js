@@ -468,7 +468,7 @@ function Arikaim() {
     };
 
     this.getLanguagePath = function(language) {
-        var url = this.getUrl();
+        var url = this.getBaseUrl();
         language = getDefaultValue(language,'en');
 
         if (isEmpty(language) == true) {

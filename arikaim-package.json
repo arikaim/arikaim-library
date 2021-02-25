@@ -2,16 +2,16 @@
     "title": "Arikaim",
     "package-type": "library",
     "name": "arikaim",
-    "version": "1.2.7",
+    "version": "1.2.8",
     "description": "Arikaim client library",
     "repository": "https://github.com/arikaim/arikaim-library.git",
     "files": [
-        "arikaim-1.2.7.min.js"
+        "arikaim-1.2.8.min.js"
     ],
     "versions": {
-        "1.2.6": {
+        "1.2.7": {
             "files": [
-                "arikaim-1.2.4.min.js"   
+                "arikaim-1.2.7.min.js"   
             ] 
         },                              
         "source": {
