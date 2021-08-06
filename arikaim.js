@@ -729,7 +729,7 @@ function Arikaim() {
             error: function(xhr, status, error) {
                 var response = new ApiResponse(xhr.responseText);               
                 deferred.reject(response.getErrors());
-        
+
                 callFunction(onError,response.getErrors(),null,response.getResult());
             }
         });   
