@@ -2,21 +2,21 @@
     "title": "Arikaim",
     "package-type": "library",
     "name": "arikaim",
-    "version": "1.2.9",
+    "version": "1.2.10",
     "description": "Arikaim client library",
     "repository": "https://github.com/arikaim/arikaim-library.git",
     "files": [
-        "arikaim-1.2.8.min.js"
+        "arikaim-1.2.10.min.js"
     ],
     "versions": {
         "cdn": {
             "files": [
-                "https://cdn.jsdelivr.net/gh/arikaim-repository/arikaim-library@1.2.8/arikaim-1.2.8.min.js"
+                "https://cdn.jsdelivr.net/gh/arikaim-repository/arikaim-library@1.2.10/arikaim-1.2.10.min.js"
             ]
         },
-        "1.2.7": {
+        "1.2.8": {
             "files": [
-                "arikaim-1.2.7.min.js"   
+                "arikaim-1.2.8.min.js"   
             ] 
         },                              
         "source": {

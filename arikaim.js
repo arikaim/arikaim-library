@@ -58,7 +58,7 @@ function safeCall(objName, callback, showError, showErrorDetails) {
         return call(obj,callback);
     } else {
         if (showError) {
-            console.warn('Warning: ' + objName + ' is not valid object');
+            console.warn('Warning: ' + objName + ' is not valid object.');
         }
     }
 
@@ -85,7 +85,19 @@ function getObjectProperty(path, obj) {
 }
 
 function getValue(path, obj, defaultValue) {
-    var value = getObjectProperty(path,obj);
+    var value;
+
+    if (isArray(path) == true) {
+        path.forEach(function(item) {  
+            value = getValue(item,obj,null);         
+            if (value != null) {
+                return value;
+            }
+        });
+        return defaultValue;
+    }
+    value = getObjectProperty(path,obj);
+
     return (value == null) ? defaultValue : value;      
 }
 
@@ -130,6 +142,19 @@ function inArray(value, array) {
 
 function isPromise(variable) {
     return (isObject(variable) == false) ? false : (typeof variable.then === 'function');   
+}
+
+function isElement(variable) {
+    if ((variable instanceof Element) == true || (variable instanceof Document) == true) {
+        return true;
+    }
+    if (variable instanceof jQuery) {
+       if ($(variable)[0] instanceof Element) {
+        return true;
+       }
+    }
+
+    return false;
 }
 
 function isObject(variable) {
@@ -438,6 +463,8 @@ function Arikaim() {
     var baseUrl  = '';
     var version  = '1.2.5';
     var properties = {};
+    // constants
+    var UI_LIBRARY_PATH = 'arikaim/view/library/';
 
     this.storage    = new Storage();       
 
@@ -479,6 +506,13 @@ function Arikaim() {
         }
 
         return (url.slice(-1) == '/') ? url + language + '/' : url + '/' + language + '/';         
+    };
+
+    this.getLibraryUrl = function(libraryName, relative) {
+        relative = getDefaultValue(relative,false);
+        var path = UI_LIBRARY_PATH + libraryName + '/';
+
+        return (relative == false) ? this.getUrl() + path : path;
     };
 
     this.getUrl = function() {
