@@ -6,6 +6,13 @@
  */
 'use strict';
 
+function parseNumber(value, format) {
+    value = (Number.isNaN(value) == true) ? 0 : value;
+    var number = new Number(value);
+
+    return (isEmpty(format) == false) ? number.toFixed(format) : number;
+}
+
 function createObject(className, baseName) {
     className.prototype = new baseName();
     className.prototype.constructor = baseName;
@@ -159,6 +166,14 @@ function isElement(variable) {
 
 function isObject(variable) {
     return (variable === null) ? false : (typeof variable === 'object');   
+}
+
+function isUrl(url) {
+    try {       
+        return isObject(new URL(url));
+    } catch (error) {
+        return false;
+    }
 }
 
 function isString(variable) {
@@ -697,22 +712,24 @@ function Arikaim() {
 
     this.request = function(url, method, requestData, onSuccess, onError, onProgress, crossDomain, customHeader, rawResponseData, xhrFields) {    
         var deferred = new $.Deferred();
-
+        var authHeader = this.getAuthHeader();  
+        var headerData = null;
         crossDomain = getDefaultValue(crossDomain,false); 
         requestData = getDefaultValue(requestData,null);  
 
-        if (crossDomain == false) {
-            url = this.getBaseUrl() + url;
-        }
- 
-        var authHeader = this.getAuthHeader();  
-        var headerData = null;
-
+        url = isUrl(url) ? url : this.getBaseUrl() + url;
+       
         if ((method == 'GET') && (isObject(requestData) == true)) {     
             headerData = JSON.stringify(requestData);
             requestData = null;
         }
-       
+
+        if (crossDomain == true && isObject(xhrFields) == false) {
+            xhrFields = {
+                withCredentials: true
+            };
+        }
+
         $.ajax({
             url: url,
             method: method,          
