@@ -1,6 +1,6 @@
 /**
  *  Arikaim
- *  @copyright  Copyright (c) Konstantin Atanasov <info@arikaim.com>
+ *  @copyright  Copyright (c) Intersoft Ltd <info@arikaim.com>
  *  @license    http://www.arikaim.com/license.html
  *  http://www.arikaim.com
  */
@@ -476,12 +476,12 @@ function Arikaim() {
     var jwtToken = '';
     var services = [];  
     var baseUrl  = '';
-    var version  = '1.2.5';
+    var version  = '1.2.11';
     var properties = {};
     // constants
     var UI_LIBRARY_PATH = 'arikaim/view/library/';
 
-    this.storage    = new Storage();       
+    this.storage = new Storage();       
 
     this.getBaseUrl = function() {
        return (isEmpty(baseUrl) == true) ? '' : baseUrl         
