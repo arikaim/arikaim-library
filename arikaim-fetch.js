@@ -35,6 +35,7 @@ function ArikaimClient(url, key) {
 
     this.request = function(method, url, data) {
         return new Promise(function(resolve, reject) {
+            console.log(endpoint + url);
             fetch(endpoint + url,self.getOptions(method,data))
                 .then(async function(response) {
                     var json = await response.json();

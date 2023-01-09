@@ -134,7 +134,7 @@ function isEmpty(variable) {
     if (variable === null) return true;
     if (variable === '') return true;
     if (isObject(variable) == true) {
-        return $.isEmptyObject(variable);
+        return ($.isPlainObject(variable) == true) ? $.isEmptyObject(variable) : false;          
     }
     if (isArray(variable) == true) {
         return (variable.length == 0)
@@ -476,7 +476,7 @@ function Arikaim() {
     var jwtToken = '';
     var services = [];  
     var baseUrl  = '';
-    var version  = '1.2.11';
+    var version  = '1.2.13';
     var properties = {};
     // constants
     var UI_LIBRARY_PATH = 'arikaim/view/library/';
@@ -493,7 +493,10 @@ function Arikaim() {
 
     this.resolveBaseUrl = function() {       
         var url = window.location.protocol + '//' + window.location.host;
-
+        if (isDefined('arikaim_base_url') == false) {
+            createVariable('arikaim_base_url','');
+        }
+    
         return (isEmpty(arikaim_base_url) == true) ? url : url + arikaim_base_url;   
     };
 

@@ -1,0 +1,1 @@
+uglifyjs arikaim.js -o arikaim-1.2.13.min.js --comments
