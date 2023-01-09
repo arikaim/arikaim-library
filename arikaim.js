@@ -134,7 +134,7 @@ function isEmpty(variable) {
     if (variable === null) return true;
     if (variable === '') return true;
     if (isObject(variable) == true) {
-        return ($.isPlainObject(variable) == true) ? $.isEmptyObject(variable) : false;          
+        return $.isEmptyObject(variable);          
     }
     if (isArray(variable) == true) {
         return (variable.length == 0)
@@ -312,13 +312,14 @@ function ApiResponse(response) {
 
     this.init = function(response) {
 
-        if (isEmpty(response) == true) {
-            data = this.createEmpty();
-            return;
-        }
         if (isObject(response) == true) {
             data = response;
         } else {
+            if (isEmpty(response) == true) {
+                data = this.createEmpty();
+                return;
+            }
+
             if (isJSON(response) == false) {
                 result = response;
                 status = 'ok';
@@ -476,7 +477,7 @@ function Arikaim() {
     var jwtToken = '';
     var services = [];  
     var baseUrl  = '';
-    var version  = '1.2.13';
+    var version  = '1.2.14';
     var properties = {};
     // constants
     var UI_LIBRARY_PATH = 'arikaim/view/library/';
