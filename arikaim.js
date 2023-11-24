@@ -14,7 +14,9 @@ function parseNumber(value, format) {
 }
 
 function createObject(className, baseName) {
-    className.prototype = new baseName();
+    var child = new className();
+
+    className.prototype = new baseName(child);
     className.prototype.constructor = baseName;
 
     return new className();  
@@ -477,7 +479,7 @@ function Arikaim() {
     var jwtToken = '';
     var services = [];  
     var baseUrl  = '';
-    var version  = '1.2.14';
+    var version  = '1.2.15';
     var properties = {};
     // constants
     var UI_LIBRARY_PATH = 'arikaim/view/library/';
