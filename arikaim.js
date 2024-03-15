@@ -223,12 +223,6 @@ function Events() {
         context = (isEmpty(context) == true) ? this : context;
         name = (isEmpty(name) == true) ? null : name;
 
-        var listener = { 
-            callback: callback,
-            context: context, 
-            name: name 
-        };
-
         if (isEmpty(events[event]) == true) {
             events[event] = [];
         } 
@@ -238,7 +232,12 @@ function Events() {
                 return false;
             }       
         }
-        events[event].push(listener);
+
+        events[event].push({ 
+            callback: callback,
+            context: context, 
+            name: name 
+        });
     
         return true; 
     };
@@ -252,19 +251,15 @@ function Events() {
         return this.addListener(event,callback,name,context);
     };
 
-    this.emit = function(event, param1, param2, param3, param4) {
+    this.emit = function(event, params) {
         if (isEmpty(events[event]) == true) {
             return false;
         }
-        
+        var args = Array.prototype.slice.call(arguments);
+        args.shift();
+
         events[event].forEach(function(item) {
-            switch (arguments.length) {
-                case 1: return item.callback.call(item.context), true;
-                case 2: return item.callback.call(item.context,param1), true;
-                case 3: return item.callback.call(item.context,param1,param2), true;
-                case 4: return item.callback.call(item.context,param1,param2,param3), true;
-                case 5: return item.callback.call(item.context,param1,param2,param3,param4), true;
-            }
+            return item.callback.apply(item.context,args);           
         });
     };
 
@@ -479,7 +474,7 @@ function Arikaim() {
     var jwtToken = '';
     var services = [];  
     var baseUrl  = '';
-    var version  = '1.2.15';
+    var version  = '1.2.16';
     var properties = {};
     // constants
     var UI_LIBRARY_PATH = 'arikaim/view/library/';
@@ -515,8 +510,16 @@ function Arikaim() {
         this.log('\nArikaim CMS v' + this.getVersion());  
     };
 
-    this.getLanguagePath = function(language) {
-        var url = this.getBaseUrl();
+    this.getLanguagePath = function(language, baseUrl) {
+        var url;
+        if (baseUrl == true) {
+            // base url
+            url = this.getBaseUrl();
+        } else {
+            // current url
+            url = this.getUrl();
+        }
+      
         language = getDefaultValue(language,'en');
 
         if (isEmpty(language) == true) {
@@ -546,9 +549,9 @@ function Arikaim() {
         document.location.href = url;
     };
 
-    this.setLanguage = function(language) {       
+    this.setLanguage = function(language, baseUrl) {       
         language = getDefaultValue(language,'en');          
-        var url = this.getLanguagePath(language);
+        var url = this.getLanguagePath(language, baseUrl);
      
         this.storage.setCookie('language',language,30);
         this.storage.setSession('language',language);
